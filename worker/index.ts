@@ -1,30 +1,23 @@
-import handler from "vinext/server/fetch-handler";
-import { runWithConnectorBinding } from "../lib/connector-context";
-import type { ConnectorBinding } from "../lib/connector-contract.mjs";
+import { handleApi } from '../server/api.mjs';
 
-const worker = {
-  fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
-    let binding = ctx.props?.CONNECTORS;
-    // Local preview emulates the same request-scoped capability. This branch and
-    // the auxiliary service binding are absent from production builds.
-    if (import.meta.env.DEV && !binding && env.CONNECTORS) {
-      const preview = env.CONNECTORS;
-      const expiresAt = Date.now() + 60_000;
-      binding = {
-        async getContext() {
-          if (Date.now() >= expiresAt) return { status: "request_context_expired" };
-          return preview.getContext?.() ?? { status: "binding_unavailable" };
-        },
-        async invoke(connectorId, actionName, args) {
-          if (Date.now() >= expiresAt) {
-            return { status: "request_context_expired", message: "This request has expired. Please try again." };
-          }
-          return preview.invoke(connectorId, actionName, args);
-        },
-      };
+declare const __METRO_ASSETS__: Record<string, { body: string; type: string }>;
+const assets = __METRO_ASSETS__;
+
+export default {
+  async fetch(request: Request): Promise<Response> {
+    const { pathname } = new URL(request.url);
+    if (pathname === '/api' || pathname.startsWith('/api/')) return handleApi(request);
+    if (!['GET', 'HEAD'].includes(request.method)) {
+      return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    const asset = assets[pathname === '/' ? '/index.html' : pathname];
+    if (!asset) return new Response('Not found', { status: 404 });
+    return new Response(request.method === 'HEAD' ? null : asset.body, {
+      headers: {
+        'Content-Type': asset.type,
+        'Cache-Control': pathname.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
   },
 };
-
-export default worker;

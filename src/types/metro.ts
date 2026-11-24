@@ -1,0 +1,9 @@
+export type Line = { id: string; name: string; stations: string[] };
+export type Selection = { line: string; station: string; direction: string; weekday: number };
+export type Service = { label: string; minutes: number | null; text: string };
+export type Direction = { id: string; name: string };
+export type LiveDirection = { name: string; services: Service[] };
+export type Catalog = { fetchedAt: string; source: string; lines: Line[] };
+export type LiveData = { fetchedAt: string; serviceDate: string; line: string; station: string; directions: LiveDirection[] };
+export type Timetable = { fetchedAt: string; line: string; sourceLine?: string; station: string; direction: string; weekday: number; directions: Direction[]; times: string[] };
+export type SearchResult = { line: Line; station: string; value: string };
