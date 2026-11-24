@@ -9,6 +9,17 @@ type LiveData = { fetchedAt: string; serviceDate: string; line: string; station:
 type Direction = { id: string; name: string };
 type Timetable = { fetchedAt: string; line: string; sourceLine?: string; station: string; direction: string; weekday: number; directions: Direction[]; times: string[] };
 const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+const lineThemes: Record<string, { color: string; on: string }> = {
+  "1": { color: "#82BE31", on: "#172B38" },
+  "2": { color: "#E1251B", on: "#FFFFFF" },
+  "3": { color: "#C69214", on: "#172B38" },
+  "4": { color: "#00A7D8", on: "#172B38" },
+  "5": { color: "#C81D7F", on: "#FFFFFF" },
+  "6": { color: "#79C7E8", on: "#172B38" },
+  "7": { color: "#B6A1D5", on: "#172B38" },
+  "8": { color: "#8B9B3A", on: "#172B38" },
+  "11": { color: "#D9C7A2", on: "#172B38" },
+};
 const clockFormat = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
 const shortTime = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 const dateFormat = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", month: "long", day: "numeric", weekday: "long" });
@@ -49,6 +60,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [stationOpen, setStationOpen] = useState(false);
+  const [stationReversed, setStationReversed] = useState(false);
   const [liveResult, setLiveResult] = useState<{ key: string; data: LiveData } | null>(null);
   const [scheduleResult, setScheduleResult] = useState<{ key: string; data: Timetable } | null>(null);
   const [directionResult, setDirectionResult] = useState<{ key: string; options: Direction[] } | null>(null);
@@ -57,6 +69,7 @@ export default function Home() {
   const [liveBusy, setLiveBusy] = useState(false);
   const [scheduleBusy, setScheduleBusy] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const stationListRef = useRef<HTMLDivElement>(null);
   const fixedWeekdayRef = useRef(false);
   const liveRefreshRef = useRef<() => void>(() => {});
   const scheduleRefreshRef = useRef<() => void>(() => {});
@@ -67,6 +80,7 @@ export default function Home() {
   const liveKey = `${stationKey}|${today}`;
   const scheduleKey = selection ? `${stationKey}|${selection.direction}|${selection.weekday}` : "";
   const selectedLine = lines?.find(line => line.id === selection?.line);
+  const visibleStations = selectedLine ? stationReversed ? [...selectedLine.stations].reverse() : selectedLine.stations : [];
   const live = liveResult?.key === liveKey ? liveResult.data : null;
   const timetable = scheduleResult?.key === scheduleKey ? scheduleResult.data : null;
   const directions = directionResult?.key === stationKey ? directionResult.options : [];
@@ -75,6 +89,12 @@ export default function Home() {
   const liveTimestamp = live ? Date.parse(live.fetchedAt) : 0;
   const stale = !!live && now !== null && (now - liveTimestamp > 35000 || live.serviceDate !== today);
   const stationCount = lines?.reduce((total, line) => total + line.stations.length, 0) || 0;
+
+  useEffect(() => {
+    const theme = lineThemes[selectedLine?.id || "6"] || lineThemes["6"];
+    document.documentElement.style.setProperty("--line-color", theme.color);
+    document.documentElement.style.setProperty("--line-on", theme.on);
+  }, [selectedLine?.id]);
 
   const loadCatalog = useCallback(async () => {
     catalogControllerRef.current?.abort();
@@ -124,6 +144,11 @@ export default function Home() {
       const next = { ...previous, weekday: todayWeekday }; writeSelection(next, true); return next;
     });
   }, [todayWeekday]);
+
+  useEffect(() => {
+    setStationReversed(false);
+    stationListRef.current?.scrollTo({ top: 0 });
+  }, [selectedLine?.id]);
 
   useEffect(() => {
     if (!selection || !today) return;
@@ -204,11 +229,11 @@ export default function Home() {
 
   return <main className="app-shell">
     <header className="topbar"><a className="brand" href="/"><span className="brand-icon"><TrainIcon /></span><span><span className="eyebrow">SUZHOU METRO</span><strong>苏州地铁 · 全站时刻</strong></span></a><div className="current-time"><time>{now ? clockFormat.format(now) : "--:--:--"}</time><span>{now ? dateFormat.format(now) : "日期同步中"}<span className="timezone">北京时间</span></span></div></header>
-    <div className="navigation-bar"><nav className="line-tabs" aria-label="选择线路">{lines ? lines.map(line => <button key={line.id} aria-pressed={selection?.line === line.id} onClick={() => chooseStation(line.id, line.stations[0])}><span>{line.id}</span>号线</button>) : <span className="loading-lines">正在获取线路…</span>}</nav><div className="station-search" ref={searchRef}><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.5"/><path d="m13 13 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg><input aria-label="搜索全部站点" placeholder="搜索全部站点" value={search} onFocus={() => setSearchOpen(true)} onChange={event => { setSearch(event.target.value); setSearchOpen(true); }} onKeyDown={event => { if (event.key === "Escape") setSearchOpen(false); }} disabled={!lines}/>{search && <button className="clear-search" aria-label="清空搜索" onClick={() => { setSearch(""); setSearchOpen(false); }}>×</button>}{searchOpen && search.trim() && <div className="search-results"><p>{results.length ? `${results.length} 个线路站点结果` : "没有找到对应站点"}</p><ul aria-label="站点搜索结果">{results.map(({ line, station }) => <li key={`${line.id}-${station}`}><button onClick={() => chooseStation(line.id, station)}><span className="search-line">{line.name}</span><span>{station}</span></button></li>)}</ul></div>}</div></div>
+    <div className="navigation-bar"><nav className="line-tabs" aria-label="选择线路">{lines ? lines.map(line => <button key={line.id} aria-pressed={selection?.line === line.id} onClick={() => chooseStation(line.id, line.stations[0])}><span style={{ background: lineThemes[line.id]?.color, color: lineThemes[line.id]?.on }}>{line.id}</span>号线</button>) : <span className="loading-lines">正在获取线路…</span>}</nav><div className="station-search" ref={searchRef}><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.5"/><path d="m13 13 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg><input aria-label="搜索全部站点" placeholder="搜索全部站点" value={search} onFocus={() => setSearchOpen(true)} onChange={event => { setSearch(event.target.value); setSearchOpen(true); }} onKeyDown={event => { if (event.key === "Escape") setSearchOpen(false); }} disabled={!lines}/>{search && <button className="clear-search" aria-label="清空搜索" onClick={() => { setSearch(""); setSearchOpen(false); }}>×</button>}{searchOpen && search.trim() && <div className="search-results"><p>{results.length ? `${results.length} 个线路站点结果` : "没有找到对应站点"}</p><ul aria-label="站点搜索结果">{results.map(({ line, station }) => <li key={`${line.id}-${station}`}><button onClick={() => chooseStation(line.id, station)}><span className="search-line">{line.name}</span><span>{station}</span></button></li>)}</ul></div>}</div></div>
     {notice && <div className="notice-banner" role="status">{notice}</div>}
     {catalogError && <div className="error-banner" role="alert"><span>{catalogError}</span><button onClick={() => void loadCatalog()} disabled={catalogBusy}>{catalogBusy ? "正在获取" : "重试线路目录"}</button></div>}
     <div className="workspace">
-      <aside className="station-sidebar"><div className="sidebar-heading"><div><span className="eyebrow">STATIONS</span><h2>{selectedLine?.name || "选择线路"}<span>{selectedLine?.stations.length || "—"} 站</span></h2></div><button className="mobile-station-toggle" aria-expanded={stationOpen} aria-controls="station-list" onClick={() => setStationOpen(!stationOpen)}>{stationOpen ? "收起站点" : "选择车站"}<span className={stationOpen ? "chevron open" : "chevron"}/></button></div><div id="station-list" className={`station-list ${stationOpen ? "expanded" : ""}`}><ol>{selectedLine?.stations.map(station => <li key={station} className={selection?.station === station ? "active" : ""}><button aria-current={selection?.station === station ? "true" : undefined} onClick={() => chooseStation(selectedLine.id, station)}><span className="station-marker"/><span>{station}</span>{selection?.station === station && <span className="selected-caption">当前</span>}</button></li>)}</ol>{!selectedLine && <p className="sidebar-empty">{catalogError ? "线路目录暂不可用" : "正在加载站点…"}</p>}</div><div className="network-caption">{lines ? `${lines.length} 条线路 · ${stationCount} 个线路站点` : "线路与站点来自原站目录"}</div></aside>
+      <aside className="station-sidebar"><div className="sidebar-heading"><div><span className="eyebrow">STATIONS</span><h2>{selectedLine?.name || "选择线路"}<span>{selectedLine?.stations.length || "—"} 站</span></h2></div><button className="mobile-station-toggle" aria-expanded={stationOpen} aria-controls="station-list" onClick={() => setStationOpen(!stationOpen)}>{stationOpen ? "收起站点" : "选择车站"}<span className={stationOpen ? "chevron open" : "chevron"}/></button></div><div className="station-order-controls"><div><span>{stationReversed ? "倒序排列" : "正序排列"}</span><button aria-pressed={stationReversed} aria-controls="station-list" disabled={!selectedLine} onClick={() => { setStationReversed(value => !value); stationListRef.current?.scrollTo({ top: 0 }); }}>{stationReversed ? "恢复顺序" : "首尾反转"}</button></div>{selectedLine && <p>{visibleStations[0]}<span>至</span>{visibleStations.at(-1)}</p>}</div><div id="station-list" ref={stationListRef} className={`station-list ${stationOpen ? "expanded" : ""}`}><ol>{visibleStations.map(station => <li key={station} className={selection?.station === station ? "active" : ""}><button aria-current={selection?.station === station ? "true" : undefined} onClick={() => selectedLine && chooseStation(selectedLine.id, station)}><span className="station-marker"/><span>{station}</span>{selection?.station === station && <span className="selected-caption">当前</span>}</button></li>)}</ol>{!selectedLine && <p className="sidebar-empty">{catalogError ? "线路目录暂不可用" : "正在加载站点…"}</p>}</div><div className="network-caption">{lines ? `${lines.length} 条线路 · ${stationCount} 个线路站点` : "线路与站点来自原站目录"}</div></aside>
       <div className="station-content">
         <section className="station-heading"><div className="station-title-row"><div><div className="station-kicker"><span className="line-badge">{selection?.line || "—"}<small>号线</small></span><span>全站实时查询</span></div><h1>{selection?.station || "正在获取站点"}</h1></div><div className={`sync-status ${liveError || stale ? "warning" : ""}`} role="status"><span className="status-dot"/>{status}</div></div><div className="direction-row"><span>乘车方向</span><div className="direction-tabs" aria-label="选择乘车方向">{directions.length ? directions.map(direction => <button key={direction.id} aria-pressed={selection?.direction === direction.id} onClick={() => selection && choose({ ...selection, direction: direction.id })}>{direction.name}方向</button>) : <span className="direction-placeholder">{scheduleError ? "方向信息暂不可用" : "正在获取方向…"}</span>}</div></div></section>
         <section className="live-section" aria-labelledby="live-title"><div className="section-heading"><h2 id="live-title">实时班次 <span>今天</span></h2><span className="section-note">到达本站的最近两班</span></div>{liveError && <div className="inline-error" role="alert">{liveError}{live ? " 当前保留上次成功获取的数据。" : ""}<button onClick={() => liveRefreshRef.current()} disabled={liveBusy}>重试</button></div>}
