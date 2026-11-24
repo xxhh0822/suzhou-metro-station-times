@@ -67,9 +67,8 @@ time, .countdown, .card-arrival strong, .schedule-summary strong, .hour-row { fo
 .sidebar-heading h2 > span { font-size: .875rem; font-weight: 400; color: var(--muted); }
 .mobile-station-toggle { display: none; }
 .station-order-controls { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-.station-order-controls > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .875rem; color: var(--muted); }
+.station-order-controls > div { display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-size: .875rem; color: var(--muted); }
 .station-order-controls button { border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; background: white; color: var(--accent); font-size: .875rem; white-space: nowrap; }
-.station-order-controls button[aria-pressed="true"] { background: var(--soft); border-color: var(--line-color); }
 .station-order-controls p { margin-top: 9px; font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
 .station-order-controls p > span { margin: 0 6px; color: var(--muted); }
 .station-list { max-height: calc(100vh - 310px); min-height: 220px; overflow-y: auto; scrollbar-width: thin; padding: 13px 0; }
