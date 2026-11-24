@@ -1,0 +1,439 @@
+<html lang="en">
+
+<body>
+    <div class="container" style="padding-left: 4%">
+        <div class="time-table-box">
+            <div class="select-contain">
+                <div class="title">
+                    <h3 style="display: inline-block">11 号线 唯亭</h3>
+                    <h3 style="float: right">11-24 周二</h3></div>
+            </div>
+            <div class="select-contain">
+                <div class="title"><h3>时间</h3></div>
+                <div class="select-box">
+                    <div class="box-item " v-weekday="1">周一</div>
+                    <div class="box-item " v-weekday="2">周二</div>
+                    <div class="box-item " v-weekday="3">周三</div>
+                    <div class="box-item " v-weekday="4">周四</div>
+                    <div class="box-item " v-weekday="5">周五</div>
+                </div>
+                <div class="select-box" style="margin-top: 15px;">
+                    <div class="box-item " v-weekday="6">周六</div>
+                    <div class="box-item  box-item-active " v-weekday="7">周日</div>
+                </div>
+            </div>
+            <div class="select-contain">
+                <div class="title"><h3>方向</h3></div>
+                <div class="select-box">
+                    <div class="box-item  box-item-active " v-direction="0">花桥</div>
+                    <div class="box-item " v-direction="1">苏州新区火车站</div>
+                </div>
+            </div>
+
+            <div class="time-tabbox">
+                <div style="color:red;font-size: 10px;margin-top: -15px;font-weight: 900;">列车时刻表仅供参考，实际以现场列车运行情况为准</div>
+                <div class="tab-content">
+                    <div class="tab-item">
+                        <div class="tab-item-left">小时</div>
+                        <div class="tab-item-right">时刻</div>
+                    </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">6</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    12
+                                
+                                    19
+                                
+                                    26
+                                
+                                    33
+                                
+                                    41
+                                
+                                    48
+                                
+                                    55
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">7</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    02
+                                
+                                    10
+                                
+                                    17
+                                
+                                    24
+                                
+                                    31
+                                
+                                    38
+                                
+                                    45
+                                
+                                    53
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">8</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    00
+                                
+                                    07
+                                
+                                    14
+                                
+                                    21
+                                
+                                    28
+                                
+                                    35
+                                
+                                    42
+                                
+                                    49
+                                
+                                    56
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">9</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    03
+                                
+                                    10
+                                
+                                    17
+                                
+                                    24
+                                
+                                    31
+                                
+                                    38
+                                
+                                    45
+                                
+                                    52
+                                
+                                    59
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">10</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    06
+                                
+                                    13
+                                
+                                    20
+                                
+                                    27
+                                
+                                    34
+                                
+                                    41
+                                
+                                    48
+                                
+                                    55
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">11</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    02
+                                
+                                    09
+                                
+                                    16
+                                
+                                    23
+                                
+                                    30
+                                
+                                    37
+                                
+                                    44
+                                
+                                    51
+                                
+                                    58
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">12</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    05
+                                
+                                    12
+                                
+                                    19
+                                
+                                    26
+                                
+                                    33
+                                
+                                    40
+                                
+                                    47
+                                
+                                    54
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">13</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    01
+                                
+                                    08
+                                
+                                    15
+                                
+                                    22
+                                
+                                    29
+                                
+                                    36
+                                
+                                    43
+                                
+                                    50
+                                
+                                    57
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">14</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    04
+                                
+                                    11
+                                
+                                    18
+                                
+                                    25
+                                
+                                    32
+                                
+                                    39
+                                
+                                    46
+                                
+                                    53
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">15</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    00
+                                
+                                    07
+                                
+                                    14
+                                
+                                    21
+                                
+                                    28
+                                
+                                    35
+                                
+                                    42
+                                
+                                    49
+                                
+                                    56
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">16</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    03
+                                
+                                    10
+                                
+                                    17
+                                
+                                    24
+                                
+                                    31
+                                
+                                    38
+                                
+                                    45
+                                
+                                    52
+                                
+                                    59
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">17</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    06
+                                
+                                    13
+                                
+                                    20
+                                
+                                    27
+                                
+                                    34
+                                
+                                    40
+                                
+                                    46
+                                
+                                    52
+                                
+                                    58
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">18</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    05
+                                
+                                    11
+                                
+                                    17
+                                
+                                    23
+                                
+                                    29
+                                
+                                    35
+                                
+                                    41
+                                
+                                    47
+                                
+                                    53
+                                
+                                    59
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">19</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    05
+                                
+                                    12
+                                
+                                    19
+                                
+                                    26
+                                
+                                    33
+                                
+                                    40
+                                
+                                    47
+                                
+                                    54
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">20</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    01
+                                
+                                    08
+                                
+                                    15
+                                
+                                    22
+                                
+                                    28
+                                
+                                    36
+                                
+                                    43
+                                
+                                    50
+                                
+                                    57
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">21</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    04
+                                
+                                    11
+                                
+                                    18
+                                
+                                    25
+                                
+                                    32
+                                
+                                    39
+                                
+                                    46
+                                
+                                    53
+                                </div>
+                        </div>
+                    
+                        <div class="tab-item">
+                            <div class="tab-item-left">22</div>
+                            <div class="tab-item-right" style="text-align: left;padding-left: 15px;">
+                                
+                                    00
+                                
+                                    07
+                                
+                                    21
+                                
+                                    35
+                                
+                                    48
+                                </div>
+                        </div>
+                    
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+    
+    
+    
+</body>
+</html>

@@ -1,0 +1,51 @@
+<html lang="en">
+
+<body>
+    <div id="app">
+        <div class="staTre-bg"></div>
+        <div class="staTre-info-wrap" onclick="location.href='station';">
+            <p class="staTre-info-select">当前站点</p>
+            <p class="staTre-info-title">
+                车坊 
+                
+            </p>
+            <div style="color:red;font-size: 10px;margin-top: 26px;font-weight: 900;">列车时刻表仅供参考，实际以现场列车运行情况为准</div>
+        </div>
+        
+        <div class="container" style="margin-top: 55px;">
+            
+            <div class="staTre-timeline-item">
+                <div style="margin-top: -45px;
+                font-weight: 700;
+                font-size: 25px;">8 号线</div>
+
+                <br><span>最近班次</span>
+                <div class="staTre-timeline-tableWrap" style="padding-right: 10px;">
+                    <div class="staTre-timeline-tableHead">
+                        <div class="tableLeft">车坊方向</div>
+                        <div class="tableRight">西津桥方向</div>
+                    </div>
+                    <div class="staTre-timeline-tableBody">
+                        <div class="tableLeft"><div class="inStation-time">暂无</div><div class="inStation-title">预计到达</div></div>
+                        <div class="tableRight"><div class="inStation-time">4 分钟</div><div class="inStation-title">预计到达</div></div>
+                    </div>
+                </div>
+
+                <br><span>下一班</span>
+                <div class="staTre-timeline-tableWrap">
+                    <div class="staTre-timeline-tableHead">
+                        <div class="tableLeft">车坊方向</div>
+                        <div class="tableRight">西津桥方向</div>
+                    </div>
+                    <div class="staTre-timeline-tableBody">
+                        <div class="tableLeft"><div class="inStation-time">暂无</div><div class="inStation-title">预计到达</div></div>
+                        <div class="tableRight"><div class="inStation-time">10 分钟</div><div class="inStation-title">预计到达</div></div>
+                    </div>
+                </div>
+                <div style="text-align: right; color: #2083b5;" onclick="toScheduling()">查询列车时刻表</div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
